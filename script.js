@@ -11,26 +11,31 @@ function generateRandomNumbers() {
     }
 
     const container = document.getElementById('randomNumbersContainer');
-    container.innerHTML = '';
+    container.innerHTML = ''; // 每次生成前清空之前的内容
 
     for (let g = 0; g < groups; g++) {
-        const randomNumbers = [];
-        let sum = 0;
+        let validGroup = false;
+        let randomNumbers;
 
-        // Generate count - 1 random integers
-        for (let i = 0; i < count - 1; i++) {
-            const num = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-            randomNumbers.push(num);
-            sum += num;
-        }
+        while (!validGroup) {
+            randomNumbers = [];
+            let sum = 0;
 
-        // Calculate the last number to ensure the average is correct
-        const lastNumber = Math.round(average * count - sum);
-        if (lastNumber < minRange || lastNumber > maxRange) {
-            alert("计算出的最后一个数不在指定范围内，请调整输入！");
-            return;
+            // Generate count - 1 random integers
+            for (let i = 0; i < count - 1; i++) {
+                const num = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+                randomNumbers.push(num);
+                sum += num;
+            }
+
+            // Calculate the last number to ensure the average is correct
+            const lastNumber = Math.round(average * count - sum);
+
+            if (lastNumber >= minRange && lastNumber <= maxRange) {
+                randomNumbers.push(lastNumber);
+                validGroup = true; // Mark the group as valid if the last number is within range
+            }
         }
-        randomNumbers.push(lastNumber);
 
         // Create and append the element for this group
         const groupDiv = document.createElement('div');
